@@ -1,0 +1,135 @@
+
+CREATE TABLE decor (
+                decor_id INT NOT NULL,
+                decor_comp_name VARCHAR(255) NOT NULL,
+                decor_comp_location VARCHAR(255) NOT NULL,
+                decor_comp_cost DOUBLE PRECISION NOT NULL,
+                PRIMARY KEY (decor_id)
+);
+
+
+CREATE TABLE photoblust (
+                photoblust_id INT NOT NULL,
+                photography_comp_name VARCHAR(255) NOT NULL,
+                photography_comp_cost DOUBLE PRECISION NOT NULL,
+                photography_comp_location VARCHAR(255) NOT NULL,
+                PRIMARY KEY (photoblust_id)
+);
+
+
+CREATE TABLE food (
+                food_id INT NOT NULL,
+                food_shop_name VARCHAR(255) NOT NULL,
+                food_shop_des VARCHAR(255) NOT NULL,
+                food_item VARCHAR(255) NOT NULL,
+                food_quantity INT NOT NULL,
+                food_price DOUBLE PRECISION NOT NULL,
+                PRIMARY KEY (food_id)
+);
+
+
+CREATE TABLE hall (
+                hall_id INT NOT NULL,
+                hall_name VARCHAR(255) NOT NULL,
+                hall_capacity INT NOT NULL,
+                hall_location VARCHAR(255) NOT NULL,
+                hall_parking INT NOT NULL,
+                hall_des VARCHAR(255) NOT NULL,
+                hall_price DOUBLE PRECISION NOT NULL,
+                PRIMARY KEY (hall_id)
+);
+
+
+CREATE UNIQUE INDEX hall_idx
+ ON hall
+ ( hall_id );
+
+CREATE TABLE user (
+                user_id INT NOT NULL,
+                user_email VARCHAR(50) NOT NULL,
+                hall_id INT NOT NULL,
+                food_id INT NOT NULL,
+                photoblust_id INT NOT NULL,
+                decor_id INT NOT NULL,
+                user_location VARCHAR(255) NOT NULL,
+                user_ph_no CHAR(14) NOT NULL,
+                user_name VARCHAR(50) NOT NULL,
+                user_password VARCHAR(50) NOT NULL,
+                user_type INT NOT NULL,
+                PRIMARY KEY (user_id, user_email, hall_id, food_id, photoblust_id, decor_id)
+);
+
+
+CREATE TABLE Booking (
+                food_id INT NOT NULL,
+                photoblust_id INT NOT NULL,
+                user_id INT NOT NULL,
+                user_email VARCHAR NOT NULL,
+                hall_id INT NOT NULL,
+                book_id INT NOT NULL,
+                decor_id INT NOT NULL,
+                book_date DATE NOT NULL,
+                book_type INT NOT NULL,
+                book_quantity INT NOT NULL,
+                book_time TIME NOT NULL,
+                PRIMARY KEY (food_id, photoblust_id, user_id, user_email, hall_id, book_id, decor_id)
+);
+
+
+CREATE UNIQUE INDEX booking_idx
+ ON Booking
+ ( food_id );
+
+ALTER TABLE Booking ADD CONSTRAINT decor_booking_fk
+FOREIGN KEY (decor_id)
+REFERENCES decor (decor_id)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE user ADD CONSTRAINT decor_user_fk
+FOREIGN KEY (decor_id)
+REFERENCES decor (decor_id)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE Booking ADD CONSTRAINT photoblust_booking_fk
+FOREIGN KEY (photoblust_id)
+REFERENCES photoblust (photoblust_id)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE user ADD CONSTRAINT photoblust_user_fk
+FOREIGN KEY (photoblust_id)
+REFERENCES photoblust (photoblust_id)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE Booking ADD CONSTRAINT food_booking_fk
+FOREIGN KEY (food_id)
+REFERENCES food (food_id)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE user ADD CONSTRAINT food_user_fk
+FOREIGN KEY (food_id)
+REFERENCES food (food_id)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE Booking ADD CONSTRAINT hall_booking_fk
+FOREIGN KEY (hall_id)
+REFERENCES hall (hall_id)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE user ADD CONSTRAINT hall_user_fk
+FOREIGN KEY (hall_id)
+REFERENCES hall (hall_id)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE Booking ADD CONSTRAINT user_booking_fk
+FOREIGN KEY (user_id, user_email)
+REFERENCES user (user_id, user_email)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
